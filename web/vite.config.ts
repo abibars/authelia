@@ -1,4 +1,4 @@
-import htmlEnv from "vite-plugin-html-env";
+import { loadEnv } from "vite";
 import istanbul from "vite-plugin-istanbul";
 import svgr from "vite-plugin-svgr";
 import { defineConfig } from "vite-react";
@@ -14,13 +14,25 @@ const istanbulPlugin = isCoverage
       })
     : undefined;
 
-export default defineConfig({
-    build: {
-        outDir: "../internal/server/public_html",
-        assetsDir: "static",
-    },
-    eslint: {
-        enable: true,
-    },
-    plugins: [istanbulPlugin, htmlEnv(), svgr(), tsconfigPaths()],
+export default defineConfig(({ mode }) => {
+    const env = loadEnv(mode, "env");
+    return {
+        build: {
+            outDir: "../internal/server/public_html",
+            assetsDir: "static",
+        },
+        server: {
+            host: process.env.HOST,
+        },
+        eslint: {
+            enable: true,
+        },
+        envDir: "env",
+        html: {
+            injectData: {
+                ...env,
+            },
+        },
+        plugins: [istanbulPlugin, svgr(), tsconfigPaths()],
+    };
 });
