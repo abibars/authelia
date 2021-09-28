@@ -19,8 +19,8 @@ export default defineConfig({
         outDir: "../internal/server/public_html",
         assetsDir: "static",
     },
-    server: {
-        hmr: { clientPort: 3000 },
+    eslint: {
+        enable: true,
     },
     plugins: [istanbulPlugin, htmlEnv(), svgr(), tsconfigPaths()],
 });
